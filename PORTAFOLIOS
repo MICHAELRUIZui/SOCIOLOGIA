@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subida de Documentos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1em;
+        }
+        main {
+            margin: 20px;
+        }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        form label, form input {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        form input[type="text"], form input[type="email"], form input[type="file"], form input[type="url"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        form button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        form button:hover {
+            background-color: #45a049;
+        }
+        h2 {
+            margin-top: 40px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: #fff;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Subida de Documentos</h1>
+    </header>
+
+    <main>
+        <form id="uploadForm">
+            <label for="nombre">Nombre y Apellidos:</label>
+            <input type="text" id="nombre" name="nombre" required>
+
+            <label for="correo">Correo Institucional:</label>
+            <input type="email" id="correo" name="correo" required>
+
+            <label for="documento">Subir Documento:</label>
+            <input type="file" id="documento">
+
+            <label for="enlace">O Enlace al Documento:</label>
+            <input type="url" id="enlace" placeholder="https://ejemplo.com/documento">
+
+            <button type="submit">Subir Documento</button>
+        </form>
+
+        <h2>Lista de Documentos Subidos</h2>
+        <table id="documentTable">
+            <thead>
+                <tr>
+                    <th>Nombre del Documento</th>
+                    <th>Fecha y Hora de Subida</th>
+                    <th>Nombre del Usuario</th>
+                    <th>Correo Institucional</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Aquí se llenarán los documentos -->
+            </tbody>
+        </table>
+    </main>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const nombre = document.getElementById('nombre').value;
+            const correo = document.getElementById('correo').value;
+            const archivo = document.getElementById('documento').files[0]; // Obtenemos el archivo
+            const enlace = document.getElementById('enlace').value; // Obtenemos el enlace si existe
+            const fecha = new Date().toLocaleString(); // Fecha y hora actual
+            let nombreDocumento = "";
+            let urlDocumento = "";
+
+            // Verificar si el archivo o el enlace están presentes
+            if (archivo) {
+                nombreDocumento = archivo.name; // Nombre del archivo
+                urlDocumento = URL.createObjectURL(archivo); // Crear un objeto URL temporal para el archivo
+            } else if (enlace) {
+                nombreDocumento = enlace;
+                urlDocumento = enlace; // El enlace es el mismo URL
+            } else {
+                alert('Por favor, suba un archivo o ingrese un enlace.');
+                return;
+            }
+
+            // Insertar los datos en la tabla
+            const table = document.getElementById('documentTable').getElementsByTagName('tbody')[0];
+            const newRow = table.insertRow();
+
+            newRow.innerHTML = `
+                <td>${nombreDocumento}</td>
+                <td>${fecha}</td>
+                <td>${nombre}</td>
+                <td>${correo}</td>
+                <td><a href="${urlDocumento}" target="_blank">Abrir</a></td>
+            `;
+
+            // Limpiar el formulario
+            document.getElementById('uploadForm').reset();
+        });
+    </script>
+</body>
+</html>
